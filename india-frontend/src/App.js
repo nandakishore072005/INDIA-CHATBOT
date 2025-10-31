@@ -20,8 +20,7 @@ function App() {
     setMessages((prev) => [...prev, userMessage]);
 
     try {
-      const res = await fetch("https://your-backend-name.onrender.com/chat", 
-
+      const res = await fetch("https://india-chatbot-1.onrender.com/chat",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
