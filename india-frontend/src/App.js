@@ -1,29 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 
 function App() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const chatBoxRef = useRef(null);
+
+  // Scroll to bottom whenever messages update
+  useEffect(() => {
+    if (chatBoxRef.current) {
+      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
 
-    // Show user's message instantly
     const userMessage = { sender: "user", text: input };
     setMessages((prev) => [...prev, userMessage]);
 
-    // Send to backend
-    const res = await fetch("http://localhost:5000/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: input }),
-    });
+    try {
+      const res = await fetch("https://your-backend-name.onrender.com/chat", 
 
-    const data = await res.json();
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: input }),
+        }
+      );
 
-    // Show bot's reply
-    const botMessage = { sender: "bot", text: data.reply };
-    setMessages((prev) => [...prev, botMessage]);
+      const data = await res.json();
+      const botMessage = { sender: "bot", text: data.reply };
+      setMessages((prev) => [...prev, botMessage]);
+    } catch (err) {
+      console.error("Error connecting to backend:", err);
+      const errorMessage = {
+        sender: "bot",
+        text: "❌ Backend not reachable.",
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    }
 
     setInput("");
   };
@@ -36,7 +52,7 @@ function App() {
     <div className="chat-container">
       <div className="chat-header">Bharat.AI 🤖</div>
 
-      <div className="chat-box">
+      <div className="chat-box" ref={chatBoxRef}>
         {messages.map((msg, index) => (
           <div
             key={index}

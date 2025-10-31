@@ -5,9 +5,8 @@ body {
   margin: 0;
   padding: 0;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  justify-content: center; /* horizontal center */
+  height: 100%;
 }
 
 .chat-container {
@@ -39,6 +38,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  scroll-behavior: smooth;
 }
 
 .message {

@@ -5,7 +5,11 @@ const cors = require("cors");
 const chatRoutes = require("./chatroutes"); // same folder
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST"],
+  credentials: true
+}));
 app.use(express.json());
 
 // MongoDB connection
